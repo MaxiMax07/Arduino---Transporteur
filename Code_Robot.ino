@@ -3,18 +3,18 @@ const unsigned char M1DIR = 7;
 const unsigned char M2DIR = 8;
 const unsigned char M1PWM = 9;
 const unsigned char M2PWM = 10;
-const unsigned char LED = 13;
-  // Déclaration des variables
-int vitesse;
-int delai;
-int DIR1;
-int DIR2;
+const unsigned char LED   = 13;
+
+  // Déclarations des constantes d'états
+const int ARRETER       = 0;
+const int AVANCER       = 1;
+const int TOURNERGAUCHE = 2;
+const int RECULER       = 3;
+const int TOURNERDROITE = 4;
 
 
 void setup() {
-  // put your setup code here, to run once:
-
-  //On setup toute les pins directionnelles et le LED
+    //On initialise toute les pins directionnelles et le LED
   Serial.begin(9600);
   pinMode(M1PWM, OUTPUT);
   pinMode(M2PWM, OUTPUT);
@@ -24,75 +24,75 @@ void setup() {
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-  // Cela sert à ramasser en continue les valeurs des capteurs
+    // Cela sert à ramasser en continue les valeurs des capteurs
 
-  // Par exemple, le led jaune de base va s'allumer seulement
-  // lorsque le robot fait une rotation ou est à l'arrêt
-
-   if (DIR1==HIGH && DIR2==LOW) {
-      digitalWrite(LED, HIGH); }
-   else if (DIR1==LOW && DIR2==HIGH) {
-      digitalWrite(LED, HIGH); }
-   else {
-      digitalWrite(LED, LOW); }
+  int action = ARRETER;
+    // Par exemple, le led jaune de base va s'allumer seulement
+    // lorsque le robot fait une rotation ou est à l'arrêt
+  if (action == TOURNERGAUCHE || action == TOURNERDROITE || action == ARRETER) {
+    digitalWrite(LED, HIGH); 
+  }
+  else {
+    digitalWrite(LED, LOW); 
+  }
+    //n'oublie pas, arduino ne fait qu'une action à la fois 
 }
 
-  //Fonctions pour le déplacement
+//Fonctions pour le déplacement
 
   //Fonction de base
-void deplacement(int vitesse,int DIR1,int DIR2,int delai) {
-    //Valeurs de max et min en analogue
-  if (vitesse>=255) vitesse = 255;
-    //Valeur nécessairement positif puisque analogue (8 bit)
-  if (vitesse<0) vitesse=-vitesse;
-  // Direction et vitesse moteur 1
+void deplacement(int vitesse,int action,int duree) {
+  int dir1 = HIGH;
+  int dir2 = HIGH;
+
+    //Restreindre la valeur max en analogue
+  if (vitesse >= 255) {
+    vitesse = 255;
+  }
+    //Valeur négative inverse l'action
+  if (vitesse < 0 && vitesse >= -255) {
+    vitesse = -vitesse;
+    action = (action + 2) % 4; //inverse l'action
+  } 
+  if (action == ARRETER) {
+    vitesse = 0;
+  }
+
+  switch(action) {
+    case AVANCER:
+      dir1 = HIGH;
+      dir2 = HIGH;
+      break;
+    case RECULER:
+      dir1 = LOW;
+      dir2 = LOW;
+      break;
+    case TOURNERDROITE:
+      dir1 = HIGH;
+      dir2 = LOW;
+      break;
+    case TOURNERGAUCHE:
+      dir1 = LOW;
+      dir2 = HIGH;
+      break;
+  }
+  activerMoteur(vitesse, dir1, dir2);
+
+    // Temps de la procédure
+  delay(duree);
+}
+
+
+void activerMoteur(int vitesse, int dir1, int dir2) {
+    // action et vitesse moteur 1
   analogWrite(M1PWM,vitesse);
-  digitalWrite(M1DIR,DIR1);
-  // Direction et vitesse moteur 2
+  digitalWrite(M1DIR,dir1);
+  
+    // action et vitesse moteur 2
   analogWrite(M2PWM,vitesse);
-  digitalWrite(M2DIR,DIR2);
-  // Temps de la procédure
-  delay(delai);
-}
-  //Fonction avancer
-void avancer(int vitesse,int delai) {
-  // Sens vers l'avant
-  DIR1=HIGH;
-  DIR2=HIGH;
-  deplacement(vitesse,DIR1,DIR2,delai);
-}
- //Fonction reculer
-void reculer(int vitesse,int delai) {
-  // Sens vers l'arrière
-  DIR1=LOW;
-  DIR2=LOW;
-  deplacement(vitesse,DIR1,DIR2,delai);
-}
-  //Fonction rotation à droite
-void rotationD(int vitesse, int delai) {
-  // Sens mixe pour tourner vers la droite
-  DIR1=HIGH;
-  DIR2=LOW;
-  deplacement(vitesse,DIR1,DIR2,delai);
-}
-  //Fonction rotation à gauche
-void rotationG(int vitesse, int delai) {
-  // Sens mixe pour tourner vers la gauche
-  DIR1=LOW;
-  DIR2=HIGH;
-  deplacement(vitesse,DIR1,DIR2,delai);
-}
-  //Freiner
-void brake(int delai) {
-  DIR1=LOW;
-  DIR2=LOW;
-  vitesse=0;
-  deplacement(vitesse,DIR1,DIR2,delai);
+  digitalWrite(M2DIR,dir2);
 }
 
-
-    // Ici on écrit le code! Avec les fonctions avancer, reculer
-    // brake, rotationD et rotationG sous la forme (vitesse,delai)
+    // Ici on écrit le code! 
     // vitesse étant compris entre 0 et 255 (8bit)
     // delai étant en ms

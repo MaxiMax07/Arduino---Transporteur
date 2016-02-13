@@ -1,6 +1,10 @@
-	BUT DU PROJET:
+	IN/IN:
 
-À décrire.
+Plus compliqué à programmer. Mais permet de faire des arrêts et démarrage brutaux.
+
+	PHASE/ENABLE:
+
+Plus simple mais ne permet pas d’actions brutales et rapides.
 
 	FONCTIONS PRÊTES:
 
@@ -9,6 +13,7 @@ reculer(vitesse,delai);
 brake(delai);
 rotationD(vitesse, delai);
 rotationG(vitesse, delai);
+arret(delai);
 
 	VARIABLES MANIPULABLES:
 
@@ -17,9 +22,7 @@ delai => en miniseconde
 
 	À FAIRE:
 
--Comprendre si il faut mettre le mode IN/IN ou PHASE/ENABLE sur le arduino UNO!
--Programmer la fonction coast qui permet d’arrêter brutalement le véhicule
-(mais je ne sais pas comment)
+-Voir avec équipe utilité ajouté accélération brutale
 -Tester pour calibrer les temps de rotations VS angles.
 -Programmer les futures fonctions pour servomoteurs.
 -Tester les distances VS temps pour calibrer le robot.

@@ -1,10 +1,14 @@
+	BUT DU PROJET:
+
+À décrire.
+
 	FONCTIONS PRÊTES:
 
 avancer(vitesse,delai);
 reculer(vitesse,delai);
 brake(delai);
-rotationD(vitesse, delai); //Il faut calibrer le temps de rotation pour pouvoir avoir les angles voulut!
-rotationG(vitesse, delai); //Il faut calibrer le temps de rotation pour pouvoir avoir les angles voulut!
+rotationD(vitesse, delai);
+rotationG(vitesse, delai);
 
 	VARIABLES MANIPULABLES:
 

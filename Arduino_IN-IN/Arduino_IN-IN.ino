@@ -42,6 +42,8 @@ void loop() {
 
   //Fonction avancer
 void avancer(int vitesse,int delai) {
+  //Valeurs max pour 3V estimer a 70 mais tests à faire encore
+      if (vitesse>=70) vitesse = 70;
    digitalWrite(AIN1,1);
    digitalWrite(BIN1,1);
    analogWrite(AIN2,vitesse);
@@ -50,7 +52,10 @@ void avancer(int vitesse,int delai) {
 }
  //Fonction reculer
 void reculer(int vitesse,int delai) {
+      //Vitesse doit toujours être positive
   if (vitesse<0) vitesse=-vitesse;
+      //Valeurs max pour 3V estimer a 70 mais tests à faire encore
+  if (vitesse>=70) vitesse = 70;
    digitalWrite(AIN2,1);
    digitalWrite(BIN2,1);
    analogWrite(AIN1,vitesse);
@@ -59,6 +64,8 @@ void reculer(int vitesse,int delai) {
 }
   //Fonction rotation à droite
 void rotationD(int vitesse, int delai) {
+      //Valeurs max pour 3V estimer a 70 mais tests à faire encore
+   if (vitesse>=70) vitesse = 70;
    digitalWrite(AIN1,1);
    digitalWrite(BIN2,1);
    analogWrite(AIN2,vitesse);
@@ -67,6 +74,8 @@ void rotationD(int vitesse, int delai) {
 }
   //Fonction rotation à gauche
 void rotationG(int vitesse, int delai) {
+     //Valeurs max pour 3V estimer a 70 mais tests à faire encore
+   if (vitesse>=70) vitesse = 70;
    digitalWrite(BIN1,1);
    digitalWrite(AIN2,1);
    analogWrite(BIN2,vitesse);

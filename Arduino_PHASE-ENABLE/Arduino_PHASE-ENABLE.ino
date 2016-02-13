@@ -42,8 +42,8 @@ void loop() {
 
   //Fonction de base
 void deplacement(int vitesse,int DIR1,int DIR2,int delai) {
-    //Valeurs de max et min en analogue
-  if (vitesse>=255) vitesse = 255;
+    //Valeurs max pour 3V estimer a 70 mais tests à faire encore
+  if (vitesse>=70) vitesse = 70;
     //Valeur nécessairement positif puisque analogue (8 bit)
   if (vitesse<0) vitesse=-vitesse;
   // Direction et vitesse moteur 1

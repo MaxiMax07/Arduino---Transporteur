@@ -22,6 +22,7 @@ delai => en miniseconde
 
 	À FAIRE:
 
+-Tester le voltage de sortie du moteur pour pouvoir trouvé la vitesse max (pour 3V)
 -Voir avec l’équipe l’utilité d’ajouter accélération brutale aux fonctions.
 -Tester pour calibrer les temps de rotations VS angles.
 -Programmer les futures fonctions pour les servomoteurs.

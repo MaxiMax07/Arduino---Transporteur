@@ -84,21 +84,13 @@ void rotationG(int vitesse, int delai) {
   deplacement(vitesse,DIR1,DIR2,delai);
 }
   //Freiner
-void freine(int delai) {
-  analogWrite(M1PWM,1);
-  analogWrite(M1DIR,1);
-  analogWrite(M2PWM,1);
-  analogWrite(M2DIR,1);
-  delay(delai);
+void brake(int delai) {
+  DIR1=LOW;
+  DIR2=LOW;
+  vitesse=0;
+  deplacement(vitesse,DIR1,DIR2,delai);
 }
-  //Arretêr complètement! À évité car abîme le moteur.
-void arret(int delai) {
-  analogWrite(M1PWM,0);
-  analogWrite(M1DIR,0);
-  analogWrite(M2PWM,0);
-  analogWrite(M2DIR,0);
-  delay(delai);
-}
+
 
     // Ici on écrit le code! Avec les fonctions avancer, reculer
     // brake, rotationD et rotationG sous la forme (vitesse,delai)

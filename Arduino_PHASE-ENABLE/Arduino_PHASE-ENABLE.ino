@@ -29,13 +29,18 @@ void loop() {
 
   // Par exemple, le led jaune de base va s'allumer seulement
   // lorsque le robot fait une rotation ou est à l'arrêt
+   //if (DIR1==HIGH && DIR2==LOW) {
+      //digitalWrite(LED, HIGH); }
+   //else if (DIR1==LOW && DIR2==HIGH) {
+      //digitalWrite(LED, HIGH); }
+   //else {
+      //digitalWrite(LED, LOW); }
 
-   if (DIR1==HIGH && DIR2==LOW) {
-      digitalWrite(LED, HIGH); }
-   else if (DIR1==LOW && DIR2==HIGH) {
-      digitalWrite(LED, HIGH); }
-   else {
-      digitalWrite(LED, LOW); }
+      //Clignote quand arduino tourne
+      digitalWrite(LED,HIGH);
+      delay(1000);
+      digitalWrite(LED,LOW);
+      delay(1000);
 }
 
   //Fonctions pour le déplacement
@@ -96,3 +101,4 @@ void brake(int delai) {
     // brake, rotationD et rotationG sous la forme (vitesse,delai)
     // vitesse étant compris entre 0 et 255 (8bit)
     // delai étant en ms
+

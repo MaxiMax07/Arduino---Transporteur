@@ -89,14 +89,34 @@ void loop() {
       //digitalWrite(LED, LOW); }
 
 
-
-
+  digitalWrite(M1DIR,LOW);
+  digitalWrite(M2DIR,LOW);
     // Ici on écrit le code! Avec les fonctions avancer, reculer
     // brake, rotationD et rotationG sous la forme (vitesse,delai)
     // vitesse étant compris entre 0 et 255 (8bit)
     // delai étant en ms
-
-avancer(130,15000);
-digitalWrite(LED,HIGH);
-reculer(130,15000);
+   digitalWrite(LED,LOW);
+  analogWrite(M1PWM,0);
+  analogWrite(M2PWM,0);
+  delay(5000);
+  /*
+  digitalWrite(LED,HIGH);
+  analogWrite(M1PWM,60);
+ 
+  // Direction et vitesse moteur 2
+  analogWrite(M2PWM,60);
+  
+  delay(5000);
+  digitalWrite(LED,LOW);
+  analogWrite(M1PWM,120);
+  analogWrite(M2PWM,120);
+  delay(5000);
+  */
+  digitalWrite(LED,HIGH);
+  analogWrite(M1PWM,255);
+  analogWrite(M2PWM,255);
+  
+  delay(5000);
+  
+  // Temps de la procédure
 }

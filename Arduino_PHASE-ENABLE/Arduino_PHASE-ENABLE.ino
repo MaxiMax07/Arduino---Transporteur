@@ -113,8 +113,8 @@ void loop() {
   delay(5000);
   */
   digitalWrite(LED,HIGH);
-  analogWrite(M1PWM,255);
-  analogWrite(M2PWM,255);
+  analogWrite(M1PWM,130);
+  analogWrite(M2PWM,130);
   
   delay(5000);
   

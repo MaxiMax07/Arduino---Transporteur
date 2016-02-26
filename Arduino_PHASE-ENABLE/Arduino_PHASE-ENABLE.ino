@@ -13,7 +13,7 @@ int DIR2;
   //Fonctions pour le déplacement
 
   //Fonction de base
-void deplacement(int vitesse,int DIR1,int DIR2,int delai) {
+void deplacement(int vitesse,int DIR1,int DIR2) {
     //Valeurs max pour 3V estimer a 70 mais tests à faire encore
   if (vitesse>=130) vitesse = 130;
     //Valeur nécessairement positif puisque analogue (8 bit)
@@ -24,43 +24,41 @@ void deplacement(int vitesse,int DIR1,int DIR2,int delai) {
   // Direction et vitesse moteur 2
   analogWrite(M2PWM,vitesse);
   digitalWrite(M2DIR,DIR2);
-  // Temps de la procédure
-  delay(delai);
 }
   //Fonction avancer
-void avancer(int vitesse,int delai) {
+void avancer(int vitesse) {
   // Sens vers l'avant
   DIR1=HIGH;
   DIR2=HIGH;
-  deplacement(vitesse,DIR1,DIR2,delai);
+  deplacement(vitesse,DIR1,DIR2);
 }
  //Fonction reculer
-void reculer(int vitesse,int delai) {
+void reculer(int vitesse) {
   // Sens vers l'arrière
   DIR1=LOW;
   DIR2=LOW;
-  deplacement(vitesse,DIR1,DIR2,delai);
+  deplacement(vitesse,DIR1,DIR2);
 }
   //Fonction rotation à droite
-void rotationD(int vitesse, int delai) {
+void rotationG(int vitesse) {
   // Sens mixe pour tourner vers la droite
   DIR1=HIGH;
   DIR2=LOW;
-  deplacement(vitesse,DIR1,DIR2,delai);
+  deplacement(vitesse,DIR1,DIR2);
 }
   //Fonction rotation à gauche
-void rotationG(int vitesse, int delai) {
+void rotationD(int vitesse) {
   // Sens mixe pour tourner vers la gauche
   DIR1=LOW;
   DIR2=HIGH;
-  deplacement(vitesse,DIR1,DIR2,delai);
+  deplacement(vitesse,DIR1,DIR2);
 }
   //Freiner
 void brake(int delai) {
   DIR1=LOW;
   DIR2=LOW;
   vitesse=0;
-  deplacement(vitesse,DIR1,DIR2,delai);
+  deplacement(vitesse,DIR1,DIR2);
 }
 
 void setup() {
@@ -76,47 +74,15 @@ void setup() {
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-  // Cela sert à ramasser en continue les valeurs des capteurs
-
-  // Par exemple, le led jaune de base va s'allumer seulement
-  // lorsque le robot fait une rotation ou est à l'arrêt
-   //if (DIR1==HIGH && DIR2==LOW) {
-      //digitalWrite(LED, HIGH); }
-   //else if (DIR1==LOW && DIR2==HIGH) {
-      //digitalWrite(LED, HIGH); }
-   //else {
-      //digitalWrite(LED, LOW); }
-
-
-  digitalWrite(M1DIR,LOW);
-  digitalWrite(M2DIR,LOW);
-    // Ici on écrit le code! Avec les fonctions avancer, reculer
-    // brake, rotationD et rotationG sous la forme (vitesse,delai)
-    // vitesse étant compris entre 0 et 255 (8bit)
-    // delai étant en ms
-   digitalWrite(LED,LOW);
-  analogWrite(M1PWM,0);
-  analogWrite(M2PWM,0);
-  delay(5000);
-  /*
-  digitalWrite(LED,HIGH);
-  analogWrite(M1PWM,60);
- 
-  // Direction et vitesse moteur 2
-  analogWrite(M2PWM,60);
-  
-  delay(5000);
+ digitalWrite(LED,HIGH);
+avancer(60);
+delay(3500);
   digitalWrite(LED,LOW);
-  analogWrite(M1PWM,120);
-  analogWrite(M2PWM,120);
-  delay(5000);
-  */
-  digitalWrite(LED,HIGH);
-  analogWrite(M1PWM,130);
-  analogWrite(M2PWM,130);
-  
-  delay(5000);
-  
-  // Temps de la procédure
+reculer(60);
+delay(3500);
+rotationD(60);
+delay(2000);
+rotationG(60);
+delay(2000);
+
 }

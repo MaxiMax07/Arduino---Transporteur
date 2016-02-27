@@ -69,9 +69,11 @@ void brake(int delai) {
 // Fonction pour compter le nombre de tours
 void count1() {
 toursM1++;
+Serial.println(toursM1);
  }
 void count2() {
 toursM2++;
+Serial.println(toursM2);
  }
 
 //Nombre de clics pour distance
@@ -87,10 +89,11 @@ attachInterrupt(digitalPinToInterrupt(encoderPin1), count1, FALLING);
 pinMode(encoderPin2, INPUT_PULLUP);
 attachInterrupt(digitalPinToInterrupt(encoderPin2), count2, FALLING);
 
-
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
+
 avancer(60,100);
+
 }

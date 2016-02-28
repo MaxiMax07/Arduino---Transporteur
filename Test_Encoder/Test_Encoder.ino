@@ -1,26 +1,40 @@
-int rawsensorValue = 0; // variable to store the value coming from the sensor
-int sensorcount0 = 0;
-int sensorcount1 = 0;
-long count = 0;
+#include <Encoder.h>
+
+// Change these pin numbers to the pins connected to your encoder.
+//   Best Performance: both pins have interrupt capability
+//   Good Performance: only the first pin has interrupt capability
+//   Low Performance:  neither pin has interrupt capability
+Encoder knobLeft(1,2);
+Encoder knobRight(3,4);
+//   avoid using pins with LEDs attached
+
 void setup() {
- int i;
- for(i=5;i<=8;i++)
- pinMode(i, OUTPUT);
- Serial.begin(9600);
- int leftspeed = 255; //255 is maximum speed
- int rightspeed = 255;
+  Serial.begin(9600);
+  Serial.println("TwoKnobs Encoder Test:");
 }
+
+long positionLeft  = -999;
+long positionRight = -999;
+
 void loop() {
- rawsensorValue = analogRead(0);
- if (rawsensorValue < 600){ //Min value is 400 and max value is 800, so state chance can be done at 600.
- sensorcount1 = 1;
- }
- else {
- sensorcount1 = 0;
- }
- if (sensorcount1 != sensorcount0){
- count ++;
- }
- sensorcount0 = sensorcount1;
- Serial.println(count);
+  long newLeft, newRight;
+  newLeft = knobLeft.read();
+  newRight = knobRight.read();
+  if (newLeft != positionLeft || newRight != positionRight) {
+    Serial.print("Left = ");
+    Serial.print(newLeft);
+    Serial.print(", Right = ");
+    Serial.print(newRight);
+    Serial.println();
+    positionLeft = newLeft;
+    positionRight = newRight;
+  }
+  // if a character is sent from the serial monitor,
+  // reset both back to zero.
+  if (Serial.available()) {
+    Serial.read();
+    Serial.println("Reset both knobs to zero");
+    knobLeft.write(0);
+    knobRight.write(0);
+  }
 }

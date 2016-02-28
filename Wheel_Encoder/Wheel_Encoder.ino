@@ -8,21 +8,21 @@ double encoderPin1 = 2, encoderPin2=3,
 
 //Variables
 double rayon=1.75;
-volatile boolean toursM1=0, toursM2=0;
+volatile int toursM1, toursM2;
 int tours;
 
 // Fonction pour compter le nombre de tours
 void count1() {
 toursM1++;
-Serial.println("Tours:");
-Serial.print(toursM1);
+Serial.print("Tours:");
+Serial.println(toursM1);
  }
 
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
   pinMode(13,OUTPUT);
-  Serial.println("Initialisation du test:");
+  Serial.print("Initialisation du test:");
 pinMode(encoderPin1, INPUT_PULLUP);
 attachInterrupt(digitalPinToInterrupt(encoderPin1), count1, FALLING);
 

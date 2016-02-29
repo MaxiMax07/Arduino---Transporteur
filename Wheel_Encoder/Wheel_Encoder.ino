@@ -21,15 +21,13 @@ void setup() {
   pinMode(13,OUTPUT);
   Serial.print("Initialisation du test:");
 pinMode(encoderPin2, INPUT_PULLUP);
-
+attachInterrupt(digitalPinToInterrupt(encoderPin2), count1, CHANGE);
 
 }
 
 void loop() {
-  int sensorVal = digitalRead(encoderPin2);
-  Serial.println(sensorVal);
-  delay(1000);
-if (tours=!toursM1) {
+
+if (tours!=toursM1) {
   toursM1=tours;
 Serial.print("Tours:");
 Serial.println(toursM1);}

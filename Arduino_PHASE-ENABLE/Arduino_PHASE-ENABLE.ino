@@ -94,18 +94,24 @@ void setup() {
   attachInterrupt(digitalPinToInterrupt(encoderPin1), count1, CHANGE);
   pinMode(encoderPin2, INPUT_PULLUP);
   attachInterrupt(digitalPinToInterrupt(encoderPin2), count2, CHANGE);
-
+  double i=1;
 //Code définitif ici, qui ne recommence pas à l'infini
 
 }
 
 void loop() {
 
-  // Code à tester ici!
+  // Code qui répète ici!
 Serial.print("Tours M1:");
 Serial.println(toursM1);
 Serial.print("Tours M2:");
 Serial.println(toursM2);
 delay(5000);
 
+//Code qui tourne qu'une fois ici!
+if (i==1) {
+
+
+  
+}
 }

@@ -8,7 +8,7 @@ M2PWM = 10,
 LED = 13;
 
   // Déclaration des variables
-int vitesse, DIR1, DIR2, delai, tours, toursM1, toursM2, distance;
+int vitesse, DIR1, DIR2, delai, tours, toursM1, toursM2, distance, code;
 
   // Déclaration des constantes liées aux composantes
 double rayon=1.75, freinage=6; //(Distance en clics)  
@@ -94,7 +94,7 @@ void setup() {
   attachInterrupt(digitalPinToInterrupt(encoderPin1), count1, CHANGE);
   pinMode(encoderPin2, INPUT_PULLUP);
   attachInterrupt(digitalPinToInterrupt(encoderPin2), count2, CHANGE);
-  double i=1;
+  int code=true;
 //Code définitif ici, qui ne recommence pas à l'infini
 
 }
@@ -109,9 +109,11 @@ Serial.println(toursM2);
 delay(5000);
 
 //Code qui tourne qu'une fois ici!
-if (i==1) {
+if (code==true) {
 
 
-  
+
+
+code = false ; 
 }
 }

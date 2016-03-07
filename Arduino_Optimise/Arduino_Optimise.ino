@@ -95,7 +95,7 @@ void count1() {
   g_vToursM1++;
 }
 void count2() {
-  g_vToursM2++;
+  g_vToursM2=g_vToursM2+1;
 }
 
 //Nombre de clics pour distance
@@ -112,18 +112,18 @@ void setup() {
   pinMode(M2DIR, OUTPUT);
   pinMode(LED, OUTPUT);
   pinMode(ENCODER1, INPUT);
-  attachInterrupt(digitalPinToInterrupt(ENCODER1), count1, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(ENCODER1), count1, FALLING);
   pinMode(ENCODER2, INPUT);
-  attachInterrupt(digitalPinToInterrupt(ENCODER2), count2, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(ENCODER2), count2, FALLING);
   // Alimentation des encoders
-  pinMode(13,OUTPUT);
   pinMode(12,OUTPUT);
-  digitalWrite(13,HIGH);
+  pinMode(11,OUTPUT);
   digitalWrite(12,HIGH);
+  digitalWrite(11,HIGH);
 }
 
 void loop() {
-avancer(30,100);
+avancer(10,100);
 digitalWrite(LED,HIGH);
 brake();
 digitalWrite(LED,LOW);

@@ -12,8 +12,9 @@ volatile int g_vToursM1;
 volatile int g_vToursM2;
 
 // Déclaration des constantes liées aux composantes
-const float RAYON = 1.75;
-#define FREINAGE 6 //(Distance en clics)
+const float RAYON = 1.8;
+#define FREINAGE 0 //(Distance en clics)
+#define ENTRE_ROUES 9.3 // Distance entre les roues en cm
 
 //Permet d'avoir le code fonctionnel
 boolean code = true;
@@ -34,12 +35,18 @@ void deplacement(int in_iVitesse, int in_iDir1, int in_iDir2, int in_iDistance) 
   }
   // Direction et in_iVitesse moteur 1
   int l_iTours = dis(in_iDistance);
+  // Remise à zero des valeurs
+  g_vToursM1 = 0; g_vToursM2 = 0;
   analogWrite(M1PWM, in_iVitesse);
   digitalWrite(M1DIR, in_iDir1);
   // Direction et in_iVitesse moteur 2
   analogWrite(M2PWM, in_iVitesse);
   digitalWrite(M2DIR, in_iDir2);
   int l_iToursMoyen = (g_vToursM1 + g_vToursM2) / 2;
+  Serial.print("Tours moyen:");
+  Serial.println(l_iToursMoyen);
+  Serial.print("Tours  à réaliser:");
+  Serial.println(l_iTours);
   while ( l_iTours > l_iToursMoyen )
   {
     Serial.print("Tours M1:");
@@ -47,9 +54,8 @@ void deplacement(int in_iVitesse, int in_iDir1, int in_iDir2, int in_iDistance) 
     Serial.print("Tours M2:");
     Serial.println(g_vToursM2);
     l_iToursMoyen = (g_vToursM1 + g_vToursM2) / 2;
-    delay(200);
+    delay(1000);
   }
-  g_vToursM1 = 0; g_vToursM2 = 0;
 }
 //Fonction avancer
 void avancer(byte in_iVitesse, int in_iDistance) {
@@ -62,22 +68,26 @@ void reculer(byte in_iVitesse, int in_iDistance) {
   deplacement(in_iVitesse, LOW, LOW, in_iDistance);
 }
 //Fonction rotation à droite
-void rotationG(byte in_iVitesse, int in_iDistance) {
+void rotationG(byte in_iVitesse, int angle) {
+  //Calcul de la distance à parcourir / 2 car c'est la moyenne deux deux roues
+  int in_iDistance = ENTRE_ROUES * 3.1413 * 360 / angle;
   // Sens mixe pour tourner vers la droite
   deplacement(in_iVitesse, HIGH, LOW, in_iDistance);
 }
 //Fonction rotation à gauche
-void rotationD(byte in_iVitesse, int in_iDistance) {
+void rotationD(byte in_iVitesse, int angle) {
+  //Calcul de la distance à parcourir / 2 car c'est la moyenne deux deux roues
+  int in_iDistance = ENTRE_ROUES * 3.1413 * 360 / angle;
   // Sens mixe pour tourner vers la gauche
   deplacement(in_iVitesse, LOW, HIGH, in_iDistance);
 }
 //Freiner
 void brake() {
 analogWrite(M1PWM, 0);
-  digitalWrite(M1DIR, 0);
+  digitalWrite(M1DIR, LOW);
   // Direction et in_iVitesse moteur 2
   analogWrite(M2PWM, 0);
-  digitalWrite(M2DIR, 0);
+  digitalWrite(M2DIR, LOW);
 }
 
 // Fonction pour compter le nombre de tours -- ISR
@@ -90,7 +100,7 @@ void count2() {
 
 //Nombre de clics pour distance
 int dis(int in_iDistance) {
-  return in_iDistance / (RAYON * 2 * 3,1416) * 16 - FREINAGE;
+  return in_iDistance / (RAYON * 2 * 3.1416) * 16 - FREINAGE;
 }
 
 void setup() {
@@ -101,23 +111,21 @@ void setup() {
   pinMode(M1DIR, OUTPUT);
   pinMode(M2DIR, OUTPUT);
   pinMode(LED, OUTPUT);
-  pinMode(ENCODER1, INPUT_PULLUP);
+  pinMode(ENCODER1, INPUT);
   attachInterrupt(digitalPinToInterrupt(ENCODER1), count1, CHANGE);
-  pinMode(ENCODER2, INPUT_PULLUP);
+  pinMode(ENCODER2, INPUT);
   attachInterrupt(digitalPinToInterrupt(ENCODER2), count2, CHANGE);
-  //Code définitif ici, qui ne recommence pas à l'infini
-
+  // Alimentation des encoders
+  pinMode(13,OUTPUT);
+  pinMode(12,OUTPUT);
+  digitalWrite(13,HIGH);
+  digitalWrite(12,HIGH);
 }
 
 void loop() {
-
-
-  //Code qui tourne qu'une fois ici!
-  if (code == true) {
-
-
-
-
-    code = false ;
-  }
+avancer(30,100);
+digitalWrite(LED,HIGH);
+brake();
+digitalWrite(LED,LOW);
+delay(5000);
 }

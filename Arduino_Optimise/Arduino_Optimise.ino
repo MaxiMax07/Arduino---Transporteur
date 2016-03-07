@@ -54,7 +54,7 @@ void deplacement(int in_iVitesse, int in_iDir1, int in_iDir2, int in_iDistance) 
     Serial.print("Tours M2:");
     Serial.println(g_vToursM2);
     l_iToursMoyen = (g_vToursM1 + g_vToursM2) / 2;
-    delay(1000);
+    delay(500);
   }
 }
 //Fonction avancer

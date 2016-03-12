@@ -12,7 +12,7 @@ volatile int g_vToursM1;
 volatile int g_vToursM2;
 
 // Déclaration des constantes liées aux composantes
-const float RAYON = 1.8;
+const float RAYON = 1.75;
 #define FREINAGE 0 //(Distance en clics)
 #define ENTRE_ROUES 9.3 // Distance entre les roues en cm
 
@@ -36,25 +36,18 @@ void deplacement(int in_iVitesse, int in_iDir1, int in_iDir2, int in_iDistance) 
   // Direction et in_iVitesse moteur 1
   int l_iTours = dis(in_iDistance);
   // Remise à zero des valeurs
-  g_vToursM1 = 0; g_vToursM2 = 0;
   analogWrite(M1PWM, in_iVitesse);
   digitalWrite(M1DIR, in_iDir1);
   // Direction et in_iVitesse moteur 2
   analogWrite(M2PWM, in_iVitesse);
   digitalWrite(M2DIR, in_iDir2);
-  int l_iToursMoyen = (g_vToursM1 + g_vToursM2) / 2;
-  Serial.print("Tours moyen:");
-  Serial.println(l_iToursMoyen);
-  Serial.print("Tours  à réaliser:");
-  Serial.println(l_iTours);
+  int l_iToursMoyen = 0;
+  g_vToursM1 = 0; g_vToursM2 = 0;
   while ( l_iTours > l_iToursMoyen )
   {
-    Serial.print("Tours M1:");
-    Serial.println(g_vToursM1);
-    Serial.print("Tours M2:");
-    Serial.println(g_vToursM2);
-    l_iToursMoyen = (g_vToursM1 + g_vToursM2) / 2;
-    delay(500);
+    delay(100);
+    l_iToursMoyen = (g_vToursM1) / 2;
+    Serial.print(g_vToursM1);
   }
 }
 //Fonction avancer
@@ -95,7 +88,7 @@ void count1() {
   g_vToursM1++;
 }
 void count2() {
-  g_vToursM2=g_vToursM2+1;
+  g_vToursM2++;
 }
 
 //Nombre de clics pour distance
@@ -112,9 +105,9 @@ void setup() {
   pinMode(M2DIR, OUTPUT);
   pinMode(LED, OUTPUT);
   pinMode(ENCODER1, INPUT);
-  attachInterrupt(digitalPinToInterrupt(ENCODER1), count1, FALLING);
+  attachInterrupt(digitalPinToInterrupt(ENCODER1), count1, CHANGE);
   pinMode(ENCODER2, INPUT);
-  attachInterrupt(digitalPinToInterrupt(ENCODER2), count2, FALLING);
+  attachInterrupt(digitalPinToInterrupt(ENCODER2), count2, CHANGE);
   // Alimentation des encoders
   pinMode(12,OUTPUT);
   pinMode(11,OUTPUT);
@@ -123,9 +116,9 @@ void setup() {
 }
 
 void loop() {
-avancer(10,100);
+delay(5000);
+avancer(0,5);
 digitalWrite(LED,HIGH);
 brake();
 digitalWrite(LED,LOW);
-delay(5000);
 }

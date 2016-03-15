@@ -10,6 +10,13 @@
 // Déclaration des variables
 volatile int g_vToursM1;
 volatile int g_vToursM2;
+volatile int rawsensorValueA = 0; // variable to store the value coming from the sensor
+volatile int rawsensorValueB = 0;
+volatile int sensorcount0B = 0;
+volatile int sensorcount1B = 0;
+volatile int sensorcount0A = 0;
+volatile int sensorcount1A = 0;
+volatile boolean test = false;
 
 // Déclaration des constantes liées aux composantes
 const float RAYON = 1.75;
@@ -19,11 +26,83 @@ const float RAYON = 1.75;
 //Permet d'avoir le code fonctionnel
 boolean code = true;
 
+
+//Fonction lire donnée encodeur
+void setencodeur1()
+{
+  rawsensorValueA = analogRead(5);
+  if (rawsensorValueA < 800) { //Min value is 700 and max value is 900, so state chance can be done at 600.
+    sensorcount0A = 1;
+  }
+  else {
+    sensorcount0A = 0;
+  }
+}
+
+void setencodeur2()
+{
+  rawsensorValueB = analogRead(4);
+  if (rawsensorValueB < 800) { //Min value is 700 and max value is 900, so state chance can be done at 600.
+    sensorcount0B = 1;
+  }
+  else {
+    sensorcount0B = 0;
+  }
+}
+
+void encodeur1()
+{
+  rawsensorValueA = analogRead(5);
+  if (rawsensorValueA < 800) { //Min value is 400 and max value is 800, so state chance can be done at 600.
+    sensorcount1A = 1;
+  }
+  else {
+    sensorcount1A = 0;
+  }
+  if (sensorcount1A != sensorcount0A) {
+    g_vToursM1++;
+  }
+  sensorcount0A = sensorcount1A;
+}
+
+void encodeur2()
+{
+  rawsensorValueB = analogRead(4);
+  if (rawsensorValueB < 800) { //Min value is 700 and max value is 900, so state chance can be done at 600.
+    sensorcount1B = 1;
+  }
+  else {
+    sensorcount1B = 0;
+  }
+  if (sensorcount1B != sensorcount0B) 
+  {
+    test=true;
+  }
+  else if (sensorcount1B == sensorcount0B & test==true)
+  {
+    g_vToursM2++;
+      test=false;
+  }
+  sensorcount0B = sensorcount1B;
+
+}
 //Fonctions pour le déplacement
 
 //Fonction de base
-void deplacement(int in_iVitesse, int in_iDir1, int in_iDir2, int in_iDistance) {
+void deplacement(byte in_iVitesse, int in_iDir1, int in_iDir2, int in_iDistance) {
   //Valeur nécessairement positif puisque analogue (8 bit)
+  byte in_iVitesse1=in_iVitesse;
+  byte in_iVitesse2=in_iVitesse;
+  if (in_iDir1==123)
+  {
+    in_iVitesse1=0;
+    in_iDir1=LOW;
+  }
+  if (in_iDir2==123)
+  {
+    in_iVitesse2=0;
+    in_iDir2=LOW;
+  }
   if (in_iVitesse < 0)
   {
     in_iVitesse = -in_iVitesse;
@@ -36,24 +115,27 @@ void deplacement(int in_iVitesse, int in_iDir1, int in_iDir2, int in_iDistance) 
   // Direction et in_iVitesse moteur 1
   int l_iTours = dis(in_iDistance);
   // Remise à zero des valeurs
-  analogWrite(M1PWM, in_iVitesse);
+  analogWrite(M1PWM, in_iVitesse1);
   digitalWrite(M1DIR, in_iDir1);
   // Direction et in_iVitesse moteur 2
-  analogWrite(M2PWM, in_iVitesse);
+  analogWrite(M2PWM, in_iVitesse2);
   digitalWrite(M2DIR, in_iDir2);
   int l_iToursMoyen = 0;
   g_vToursM1 = 0; g_vToursM2 = 0;
   Serial.print("Tours à effectuer:");
   Serial.println(l_iTours);
+  setencodeur1();
+  setencodeur2();
+  digitalWrite(LED,HIGH);
   while ( l_iTours > l_iToursMoyen )
   {
-    delay(100);
-    l_iToursMoyen = (g_vToursM2) / 2;
-    Serial.print("Tours M1:");
-    Serial.println(g_vToursM1);
-    Serial.println("Tours M2:");
     Serial.println(g_vToursM2);
+    encodeur1();
+    encodeur2();
+    l_iToursMoyen = (g_vToursM2);
+    delay(75);
   }
+  digitalWrite(LED,LOW);
 }
 //Fonction avancer
 void avancer(byte in_iVitesse, int in_iDistance) {
@@ -70,39 +152,22 @@ void rotationG(byte in_iVitesse, int angle) {
   //Calcul de la distance à parcourir / 2 car c'est la moyenne deux deux roues
   int in_iDistance = ENTRE_ROUES * 3.1413 * 360 / angle;
   // Sens mixe pour tourner vers la droite
-  deplacement(in_iVitesse, HIGH, LOW, in_iDistance);
+  deplacement(in_iVitesse, HIGH, 123, in_iDistance);
 }
 //Fonction rotation à gauche
 void rotationD(byte in_iVitesse, int angle) {
   //Calcul de la distance à parcourir / 2 car c'est la moyenne deux deux roues
   int in_iDistance = ENTRE_ROUES * 3.1413 * 360 / angle;
   // Sens mixe pour tourner vers la gauche
-  deplacement(in_iVitesse, LOW, HIGH, in_iDistance);
+  deplacement(in_iVitesse, 123 , HIGH, in_iDistance);
 }
 //Freiner
 void brake() {
-analogWrite(M1PWM, 0);
+  analogWrite(M1PWM, 0);
   digitalWrite(M1DIR, LOW);
   // Direction et in_iVitesse moteur 2
   analogWrite(M2PWM, 0);
   digitalWrite(M2DIR, LOW);
-}
-
-// Fonction pour compter le nombre de tours -- ISR
-void count1()
-{
-g_vToursM1++;
-}
-  static unsigned long last_interrupt2_time = 0;
-void count2()
-{
-
-  unsigned long interrupt2_time = micros();
-  if (interrupt2_time - last_interrupt2_time > 500000)
-  {
-    g_vToursM2++;
-  }
-  last_interrupt2_time = interrupt2_time;
 }
 
 //Nombre de clics pour distance
@@ -118,19 +183,13 @@ void setup() {
   pinMode(M1DIR, OUTPUT);
   pinMode(M2DIR, OUTPUT);
   pinMode(LED, OUTPUT);
-  pinMode(ENCODER1, INPUT_PULLUP);
-  attachInterrupt(digitalPinToInterrupt(ENCODER1), count1, CHANGE);
-  pinMode(ENCODER2, INPUT_PULLUP);
-  attachInterrupt(digitalPinToInterrupt(ENCODER2), count2, CHANGE);
-  // Alimentation des encoders
-  pinMode(12,OUTPUT);
-  pinMode(11,OUTPUT);
-  digitalWrite(12,HIGH);
-  digitalWrite(11,HIGH);
 }
 
 void loop() {
   delay(6000);
-avancer(6,5);
-brake();
+  avancer(8, 100);
+  rotationG(8,90);
+  avancer(8,100);
+  rotationG(8,90);
+  brake();
 }

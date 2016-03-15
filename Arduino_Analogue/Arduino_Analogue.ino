@@ -74,14 +74,14 @@ void encodeur2()
   else {
     sensorcount1B = 0;
   }
-  if (sensorcount1B != sensorcount0B) 
+  if (sensorcount1B != sensorcount0B)
   {
-    test=true;
+    test = true;
   }
-  else if (sensorcount1B == sensorcount0B & test==true)
+  else if (sensorcount1B == sensorcount0B & test == true)
   {
     g_vToursM2++;
-      test=false;
+    test = false;
   }
   sensorcount0B = sensorcount1B;
 
@@ -89,19 +89,20 @@ void encodeur2()
 //Fonctions pour le déplacement
 
 //Fonction de base
-void deplacement(byte in_iVitesse, int in_iDir1, int in_iDir2, int in_iDistance) {
+void deplacement(byte in_iVitesse, int in_iDir1, int in_iDir2, int in_iDistance)
+{
   //Valeur nécessairement positif puisque analogue (8 bit)
-  byte in_iVitesse1=in_iVitesse;
-  byte in_iVitesse2=in_iVitesse;
-  if (in_iDir1==123)
+  byte in_iVitesse1 = in_iVitesse;
+  byte in_iVitesse2 = in_iVitesse;
+  if (in_iDir1 == 123)
   {
-    in_iVitesse1=0;
-    in_iDir1=LOW;
+    in_iVitesse1 = 0;
+    in_iDir1 = LOW;
   }
-  if (in_iDir2==123)
+  if (in_iDir2 == 123)
   {
-    in_iVitesse2=0;
-    in_iDir2=LOW;
+    in_iVitesse2 = 0;
+    in_iDir2 = LOW;
   }
   if (in_iVitesse < 0)
   {
@@ -122,19 +123,29 @@ void deplacement(byte in_iVitesse, int in_iDir1, int in_iDir2, int in_iDistance)
   digitalWrite(M2DIR, in_iDir2);
   int l_iToursMoyen = 0;
   g_vToursM1 = 0; g_vToursM2 = 0;
-  Serial.print("Tours à effectuer:");
-  Serial.println(l_iTours);
   setencodeur1();
   setencodeur2();
-  digitalWrite(LED,HIGH);
-  while ( l_iTours > l_iToursMoyen )
+  digitalWrite(LED, HIGH);
+  while ( l_iTours > g_vToursM1 || l_iTours > g_vToursM2  )
   {
-    Serial.println(g_vToursM2);
     encodeur1();
     encodeur2();
-    l_iToursMoyen = (g_vToursM2);
-    delay(75);
+    delay(50);
   }
+  while (l_iTours > g_vToursM1)
+  {
+    analogWrite(M1PWM, 0);
+    encodeur2();
+    delay(50);
+  }
+  while (l_iTours > g_vToursM2)
+  {
+    analogWrite(M2PWM, 0);
+    encodeur1();
+    delay(50);
+  }
+  analogWrite(M1PWM, 0);
+  analogWrite(M2PWM, 0);
   digitalWrite(LED,LOW);
 }
 //Fonction avancer
@@ -187,9 +198,9 @@ void setup() {
 
 void loop() {
   delay(6000);
-  avancer(8, 100);
-  rotationG(8,90);
-  avancer(8,100);
-  rotationG(8,90);
+  avancer(25, 100);
+  rotationG(25, 90);
+  avancer(25, 100);
+  rotationG(25, 90);
   brake();
 }

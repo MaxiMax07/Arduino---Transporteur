@@ -19,7 +19,7 @@ volatile int sensorcount1A = 0;
 volatile boolean test = false;
 
 // Déclaration des constantes liées aux composantes
-const float RAYON = 1.75;
+const float RAYON = 2.9;
 #define FREINAGE 0 //(Distance en clics)
 #define ENTRE_ROUES 9.3 // Distance entre les roues en cm
 
@@ -74,15 +74,15 @@ void encodeur2()
   else {
     sensorcount1B = 0;
   }
-  if (sensorcount1B != sensorcount0B)
+ if (sensorcount1B != sensorcount0B)
   {
-    test = true;
+    g_vToursM2++;
   }
-  else if (sensorcount1B == sensorcount0B & test == true)
+  /*else if (sensorcount1B == sensorcount0B & test == true)
   {
     g_vToursM2++;
     test = false;
-  }
+  } */
   sensorcount0B = sensorcount1B;
 
 }
@@ -126,13 +126,22 @@ void deplacement(byte in_iVitesse, int in_iDir1, int in_iDir2, int in_iDistance)
   setencodeur1();
   setencodeur2();
   digitalWrite(LED, HIGH);
-  while ( l_iTours > g_vToursM1 || l_iTours > g_vToursM2  )
+  Serial.println("tours a effectuer:");
+  Serial.print(l_iTours);
+  Serial.println("fin");
+  delay(3000);
+  while ( l_iTours > g_vToursM2 && l_iTours > g_vToursM1 )
   {
     encodeur1();
     encodeur2();
-    delay(50);
+    delay(20);
+    Serial.print("Tours 1M :");
+    Serial.println(g_vToursM1);
+    Serial.print("Tours moteur 2M:");
+    Serial.println(g_vToursM2);
+
   }
-  while (l_iTours > g_vToursM1)
+/*  while (l_iTours > g_vToursM1)
   {
     analogWrite(M1PWM, 0);
     encodeur2();
@@ -143,7 +152,7 @@ void deplacement(byte in_iVitesse, int in_iDir1, int in_iDir2, int in_iDistance)
     analogWrite(M2PWM, 0);
     encodeur1();
     delay(50);
-  }
+  } */
   analogWrite(M1PWM, 0);
   analogWrite(M2PWM, 0);
   digitalWrite(LED,LOW);
@@ -197,10 +206,8 @@ void setup() {
 }
 
 void loop() {
-  delay(6000);
-  avancer(25, 100);
-  rotationG(25, 90);
-  avancer(25, 100);
-  rotationG(25, 90);
+  delay(3000);
+  avancer(20, 59);
+  rotationG(20, 90);
   brake();
 }

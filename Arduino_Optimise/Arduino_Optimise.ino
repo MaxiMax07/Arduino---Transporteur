@@ -98,7 +98,7 @@ void count2()
 {
 
   unsigned long interrupt2_time = micros();
-  if (interrupt2_time - last_interrupt2_time > 500000)
+  if (interrupt2_time - last_interrupt2_time > 1000)
   {
     g_vToursM2++;
   }
@@ -131,6 +131,6 @@ void setup() {
 
 void loop() {
   delay(6000);
-avancer(6,5);
+avancer(0,10000);
 brake();
 }

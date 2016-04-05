@@ -5,7 +5,7 @@
 
 #define RAYON 58
 #define LED 13
-boolean test=true;
+boolean test = true;
 
 //Pin pour DRV8834
 #define MOTOR_STEPS 200
@@ -20,7 +20,6 @@ boolean test=true;
 #define SWITCH1 10
 #define SWITCH2 11
 
-
 //Initialisation des steppers moteurs
 DRV8834 stepper(MOTOR_STEPS, DIR1, STEP, M0, M1);
 
@@ -29,8 +28,31 @@ DRV8834 stepper(MOTOR_STEPS, DIR1, STEP, M0, M1);
 #define BRAS 3
 
 //Initilisation des servos
-Servo pince;
-Servo bras;
+Servo p; //Pince
+Servo b; //Bras
+
+//Utiliser la bras lentement
+void bras(int angle) {
+  for (int i = b.read(); i <= angle; i++) {
+    b.write(i);
+    delay(10);
+  }
+}
+
+void pince(int var) {
+  switch (var) {
+  case 1: //Ouvrir
+  p.write(100);
+  break;
+  case 2: //Fermer
+  p.write(10);
+  break;
+  case 3: //Fermer sur le sac
+  p.write(10); // À remplir
+  break;
+
+  }
+}
 
 void deplacer(int d) {
   int pas = d / (RAYON * 2 * 3.1416) * 200 / MICROSTEP;
@@ -42,13 +64,13 @@ void deplacer(int d) {
     a = LOW;
   }
 
-  digitalWrite(SWITCH1,HIGH);
-  digitalWrite(SWITCH2,HIGH);
+  digitalWrite(SWITCH1, HIGH);
+  digitalWrite(SWITCH2, HIGH);
   digitalWrite(DIR2, a);
   stepper.move(pas);
-  digitalWrite(SWITCH1,LOW);
-  digitalWrite(SWITCH2,LOW);
-  
+  digitalWrite(SWITCH1, LOW);
+  digitalWrite(SWITCH2, LOW);
+
 }
 
 void setup() {
@@ -56,28 +78,29 @@ void setup() {
   Serial.begin(9600);
   pinMode(SWITCH1, OUTPUT);
   pinMode(SWITCH2, OUTPUT);
-  pince.attach(PINCE, 600, 2400);
-  bras.attach(BRAS, 600, 2400);
+  p.attach(PINCE, 600, 2400);
+  b.attach(BRAS, 600, 2400);
   stepper.setRPM(10); //Vitesse en RPM
   stepper.setMicrostep(MICROSTEP); //Initialisation du microstep
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
-  digitalWrite(LED,HIGH);
+  digitalWrite(LED, HIGH);
   delay(1000);
-  digitalWrite(LED,LOW);
+  digitalWrite(LED, LOW);
   delay(1000);
 
-  
-deplacer(600);
-  
+
+  deplacer(600);
+
   //Mettre le code qui ne fonctionnera qu'une fois ici:
-while (test==true)
-{
+ /* while (test == true)
+  {
+
+bras(35);
 
 
-
-  test=false;
-}
+    test = false;
+  } */
 }

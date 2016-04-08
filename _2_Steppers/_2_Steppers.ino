@@ -3,7 +3,11 @@
 #include <Arduino.h>
 #include <Servo.h>
 
+<<<<<<< HEAD
 #define RAYON 29
+=======
+#define RAYON 58
+>>>>>>> origin/master
 #define LED 13
 boolean test = true;
 
@@ -13,7 +17,11 @@ boolean test = true;
 #define DIR2 6
 #define STEP 7
 // Microstep control pour DRV8834, connection en parallèle des deux pins sur les deux drivers
+<<<<<<< HEAD
 #define MICROSTEP 2 //Le nombre de step de plus à faire pour un step (doit etre 2^n)
+=======
+#define MICROSTEP 1 //Le nombre de step de plus à faire pour un step (doit etre 2^n)
+>>>>>>> origin/master
 #define M0 8
 #define M1 9
 // Switch ON et OFF pour les drivers
@@ -41,6 +49,7 @@ void bras(int angle) {
 
 void pince(int var) {
   switch (var) {
+<<<<<<< HEAD
     case 1: //Ouvrir
       p.write(100);
       break;
@@ -50,14 +59,31 @@ void pince(int var) {
     case 3: //Fermer sur le sac
       p.write(30); // À remplir
       break;
+=======
+  case 1: //Ouvrir
+  p.write(100);
+  break;
+  case 2: //Fermer
+  p.write(10);
+  break;
+  case 3: //Fermer sur le sac
+  p.write(10); // À remplir
+  break;
+>>>>>>> origin/master
 
   }
 }
 
 void deplacer(int d) {
+<<<<<<< HEAD
   int pas = - d / (RAYON * 2 * 3.1416) * 200 * MICROSTEP;
   boolean a;
   if (pas > 0) {
+=======
+  int pas = d / (RAYON * 2 * 3.1416) * 200 / MICROSTEP;
+  boolean a;
+  if (pas > 0) { //À calibrer
+>>>>>>> origin/master
     a = HIGH;
   }
   else {
@@ -73,6 +99,7 @@ void deplacer(int d) {
 
 }
 
+<<<<<<< HEAD
 void tournerD()
 {
   digitalWrite(SWITCH1, HIGH);
@@ -93,6 +120,8 @@ void tournerG()
   digitalWrite(SWITCH2, LOW);
 }
 
+=======
+>>>>>>> origin/master
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(9600);
@@ -100,7 +129,11 @@ void setup() {
   pinMode(SWITCH2, OUTPUT);
   p.attach(PINCE, 600, 2400);
   b.attach(BRAS, 600, 2400);
+<<<<<<< HEAD
   stepper.setRPM(20); //Vitesse en RPM
+=======
+  stepper.setRPM(10); //Vitesse en RPM
+>>>>>>> origin/master
   stepper.setMicrostep(MICROSTEP); //Initialisation du microstep
 }
 
@@ -111,6 +144,7 @@ void loop() {
   digitalWrite(LED, LOW);
   delay(1000);
 
+<<<<<<< HEAD
   deplacer(600);
 
   //Mettre le code qui ne fonctionnera qu'une fois ici:
@@ -122,4 +156,18 @@ void loop() {
 
   test = true;
   }
+=======
+
+  deplacer(600);
+
+  //Mettre le code qui ne fonctionnera qu'une fois ici:
+ /* while (test == true)
+  {
+
+bras(35);
+
+
+    test = false;
+  } */
+>>>>>>> origin/master
 }

@@ -29,8 +29,8 @@ DRV8834 Stepper2(MOTOR_STEPS, DIR2, STEP2, M0, M1);
 #define BRAS 3
 
 //Initilisation des servos
-Servo pince;
-Servo bras;
+Servo p;
+Servo b;
 
 void deplacement(int d)
 {
@@ -84,8 +84,8 @@ void setup() {
   // put your setup code here, to run once:
   pinMode(SWITCH1,OUTPUT);
   pinMode(SWITCH2,OUTPUT);
-  pince.attach(PINCE, 600, 2400);
-  bras.attach(BRAS, 600, 2400);
+  p.attach(PINCE, 600, 2400);
+  b.attach(BRAS, 600, 2400);
   Stepper1.setRPM(20*MICROSTEP); //Vitesse en RPM
   Stepper2.setRPM(20*MICROSTEP);
   Stepper1.setMicrostep(MICROSTEP); //Initialisation du microstep
@@ -104,7 +104,8 @@ void pince(int var) {
     case 3: //Fermer sur le sac
       p.write(30); // À remplir
       break;
-
+  }
+}
 void loop() {
   // put your main code here, to run repeatedly:
 

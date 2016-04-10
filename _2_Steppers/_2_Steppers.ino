@@ -5,7 +5,8 @@
 
 #define RAYON 29
 #define LED 13
-boolean test = true;
+boolean test = false;
+boolean detacher = true;
 
 //Pin pour DRV8834
 #define MOTOR_STEPS 200
@@ -13,7 +14,7 @@ boolean test = true;
 #define DIR2 9
 #define STEP 6
 // Microstep control pour DRV8834, connection en parallèle des deux pins sur les deux drivers
-#define MICROSTEP 1 //Le nombre de step de plus à faire pour un step (doit etre 2^n)
+#define MICROSTEP 4 //Le nombre de step de plus à faire pour un step (doit etre 2^n)
 #define M0 12
 #define M1 11
 // Switch ON et OFF pour les drivers
@@ -33,29 +34,43 @@ Servo b; //Bras
 
 //Utiliser la bras lentement
 void bras(int angle) {
-  for (int i = b.read(); i <= angle; i++) {
-    b.write(i);
-    delay(10);
+  b.attach(BRAS, 575, 2400);
+  if (angle > b.read())
+  {
+    for (int i = b.read(); i <= angle; i++) {
+      b.write(i);
+      delay(10);
+    }
   }
+  if (angle < b.read())
+  {
+    for (int i = b.read(); i >= angle; i--) {
+      b.write(i);
+      delay(10);
+    }
+  }
+  delay(250);
+  if (detacher == true)
+  {
+    b.detach();
+  }
+  detacher = true;
 }
 
 void pince(int var) {
   switch (var) {
-  case 1: //Ouvrir
-  p.write(100);
-  break;
-  case 2: //Fermer
-  p.write(10);
-  break;
-  case 3: //Fermer sur le sac
-  p.write(30); // À remplir
-  break;
+    case 1: //Ouvrir
+      p.write(100);
+      break;
+    case 2: //Fermer sur le sac
+      p.write(40);
+      break;
 
   }
 }
 
 void deplacer(int d) {
-  int pas = d / (RAYON * 2 * 3.1416) * 200 / MICROSTEP;
+  int pas = d / (RAYON * 2 * 3.1416) * 200 * MICROSTEP;
   boolean a;
   if (pas > 0) {
     a = HIGH;
@@ -73,22 +88,22 @@ void deplacer(int d) {
 
 }
 
-void tournerD()
+void rotationH()
 {
   digitalWrite(SWITCH1, HIGH);
   digitalWrite(SWITCH2, HIGH);
   digitalWrite(DIR2, LOW);
-  stepper.move(-146*MICROSTEP);
+  stepper.move(-137 * MICROSTEP);
   digitalWrite(SWITCH1, LOW);
   digitalWrite(SWITCH2, LOW);
 }
 
-void tournerG()
+void rotationAH()
 {
   digitalWrite(SWITCH1, HIGH);
   digitalWrite(SWITCH2, HIGH);
   digitalWrite(DIR2, HIGH);
-  stepper.move(146);
+  stepper.move(147 * MICROSTEP);
   digitalWrite(SWITCH1, LOW);
   digitalWrite(SWITCH2, LOW);
 }
@@ -99,7 +114,6 @@ void setup() {
   pinMode(SWITCH1, OUTPUT);
   pinMode(SWITCH2, OUTPUT);
   p.attach(PINCE, 600, 2400);
-  b.attach(BRAS, 600, 2400);
   stepper.setRPM(20); //Vitesse en RPM
   stepper.setMicrostep(MICROSTEP); //Initialisation du microstep
 }
@@ -111,16 +125,46 @@ void loop() {
   digitalWrite(LED, LOW);
   delay(1000);
 
-tournerG();
-
-
-//Mettre le code qui ne fonctionnera qu'une fois ici:
- while (test == false)
+  //Mettre le code qui ne fonctionnera qu'une fois ici:
+  while (test == false)
   {
+    bras(158);
+    pince(1);
+    delay(490);
+    deplacer(650);
+    delay(1000);
+    rotationH();
+    delay(1000);
+    deplacer(70);
+    delay(500);
+    bras(158);
+    delay(500);
+    pince(2);
+    delay(1000);
+    delay(1000);
+    detacher = false;
+    bras(35);
+    delay(1000);
+    deplacer(-90);
+    pince(1);   //Déposer le sac
+    b.detach();
+    delay(1000);
+    deplacer(90);
+    delay(1000);
+    rotationAH();
+    delay(1000);
+    deplacer(445);
+    delay(1000);
+    rotationH();
+    delay(1000);
+    bras(0);
+    delay(500);
+    deplacer(-60); //À calibrer
+    delay(500);
+    pince(2);  //Ramasser l'anneau
 
-bras(35);
 
 
     test = true;
-  } */
+  }
 }

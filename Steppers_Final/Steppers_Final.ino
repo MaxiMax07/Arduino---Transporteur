@@ -68,6 +68,9 @@ void pince(int var) {
     case 3: //Fermer sur le sac
       p.write(10);
       break;
+    case 4:
+      p.write(140);
+      break;
   }
 }
 
@@ -178,11 +181,11 @@ void loop() {
     detacher = false;
     bras(35);
     delay(1000);
-    deplacer(-110); //Ancien 130
+    deplacer(-105); //Ancien -110
     pince(1);   //Déposer le sac
     b.detach();
     delay(500);
-    deplacer(90);
+    deplacer(90); //90
     delay(1000);
     rotationAH();
     delay(1000);
@@ -194,7 +197,7 @@ void loop() {
     delay(1000);
     bras(0);
     delay(1000);
-    deplacer(-80); // Dépalcement en face anneau ancien -90
+    deplacer(-100); // Dépalcement en face anneau ancien -80
     delay(500);
     pince(2);  //Ramasser l'anneau
     delay(500);
@@ -208,8 +211,73 @@ void loop() {
     delay(500);
     semirotationH();
     delay(500);
+
+    //Déposer l'anneau
+    delay(500);
+    pince(4);
+    delay(500);
+    bras(140);
+    bras(180);
+    bras(150);
+    bras(180);
+    bras(150);
+
     deplacer(580);
 
+    //Applaudir
+    bras(120);
+    pince(1);
+    delay(500);
+    pince(2);
+    delay(500);
+    pince(1);
+    delay(500);
+    pince(2);
+    delay(500);
+    pince(1);
+    delay(500);
+    pince(2);
+    delay(500);
+    pince(1);
+    delay(500);
+    pince(2);
+    delay(500);
+    pince(1);
+    delay(500);
+    pince(2);
+    delay(500);
+    pince(1);
+    delay(500);
+    pince(2);
+    delay(500);
+    pince(1);
+    delay(500);
+    pince(2);
+    delay(500);
+    pince(1);
+    delay(500);
+    pince(2);
+    delay(500);
+    pince(1);
+    delay(500);
+    pince(2);
+    delay(500);
+    pince(1);
+    delay(500);
+    pince(2);
+    delay(500);
+    pince(1);
+    delay(500);
+    pince(2);
+    delay(500);
+    pince(1);
+    delay(500);
+    pince(2);
+    delay(500);
+    pince(1);
+    delay(500);
+    pince(2);
+    delay(500);
 
 
     test = true;

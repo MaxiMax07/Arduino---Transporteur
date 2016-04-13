@@ -34,7 +34,7 @@ Servo b; //Bras
 
 //Utiliser la bras lentement
 void bras(int angle) {
-  b.attach(BRAS, 575, 2400);
+  b.attach(BRAS, 570, 2400);
   if (angle > b.read())
   {
     for (int i = b.read(); i <= angle; i++) {
@@ -95,7 +95,7 @@ void rotationH()
   digitalWrite(SWITCH1, HIGH);
   digitalWrite(SWITCH2, HIGH);
   digitalWrite(DIR2, LOW);
-  stepper.move(-137 * MICROSTEP);
+  stepper.move(-136 * MICROSTEP);
   digitalWrite(SWITCH1, LOW);
   digitalWrite(SWITCH2, LOW);
 }
@@ -105,7 +105,7 @@ void rotationAH()
   digitalWrite(SWITCH1, HIGH);
   digitalWrite(SWITCH2, HIGH);
   digitalWrite(DIR2, HIGH);
-  stepper.move(147 * MICROSTEP);
+  stepper.move(136 * MICROSTEP);
   digitalWrite(SWITCH1, LOW);
   digitalWrite(SWITCH2, LOW);
 }
@@ -120,15 +120,26 @@ void demirotationH()
   digitalWrite(SWITCH2, LOW);
 }
 
-void demirotationAH()
+void semirotationAH()
 {
   digitalWrite(SWITCH1, HIGH);
   digitalWrite(SWITCH2, HIGH);
   digitalWrite(DIR2, HIGH);
-  stepper.move(105 * MICROSTEP);
+  stepper.move(155 * MICROSTEP);
   digitalWrite(SWITCH1, LOW);
   digitalWrite(SWITCH2, LOW);
 }
+
+void semirotationH()
+{
+  digitalWrite(SWITCH1, HIGH);
+  digitalWrite(SWITCH2, HIGH);
+  digitalWrite(DIR2, LOW);
+  stepper.move(-160 * MICROSTEP);
+  digitalWrite(SWITCH1, LOW);
+  digitalWrite(SWITCH2, LOW);
+}
+
 
 void setup() {
   // put your setup code here, to run once:
@@ -150,13 +161,15 @@ void loop() {
   //Mettre le code qui ne fonctionnera qu'une fois ici:
   while (test == false)
   {
+    bras(158);
+    delay(10000);
     pince(1);
-    delay(490);
+    delay(500);
     deplacer(650);
     delay(1000);
     rotationH();
     delay(1000);
-    deplacer(100);
+    deplacer(120);
     delay(600);
     bras(158);
     delay(500);
@@ -165,7 +178,7 @@ void loop() {
     detacher = false;
     bras(35);
     delay(1000);
-    deplacer(-120); //Ancien 130
+    deplacer(-110); //Ancien 130
     pince(1);   //Déposer le sac
     b.detach();
     delay(500);
@@ -175,13 +188,13 @@ void loop() {
     delay(1000);
     bras(90);
     delay(500);
-    deplacer(445); //Anvcienne valeur 445
+    deplacer(455); //Ancien 445
     delay(500);
     rotationH();
     delay(1000);
     bras(0);
     delay(1000);
-    deplacer(-50); //À calibrer
+    deplacer(-80); // Dépalcement en face anneau ancien -90
     delay(500);
     pince(2);  //Ramasser l'anneau
     delay(500);
@@ -189,13 +202,13 @@ void loop() {
     delay(500);
     bras(160);
     delay(500);
-    demirotationH();
+    semirotationAH();
     delay(500);
-    deplacer(-750);
+    deplacer(740);
     delay(500);
-    demirotationAH();
+    semirotationH();
     delay(500);
-    deplacer(660);
+    deplacer(580);
 
 
 
